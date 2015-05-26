@@ -55,6 +55,9 @@ def convertFile(fileName):
             continue
         else:
             # Generate Attributes Line:
+            resultLineDictionary = {}
+            for attrKey in AttrNamesDictionary:
+                resultLineDictionary[attrKey] = 0
             resultLineDictionary = {PA2Index:0,PA3Index:0,FTAIndex:0,PTSIndex:0,ORBIndex:0,DRBIndex:0,ASTIndex:0,STLIndex:0,BLKIndex:0,TOVIndex:0}
             for i in range(homeGameIndex):
                 currentWeight = SecondWeight if (homeGameIndex-i)>FirstGameLine else FirstWeight
