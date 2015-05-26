@@ -18,9 +18,9 @@ def convertFile(fileName):
     TOVIndex = 26
     HomeIndexOffset = 21
     # Game Weights:
-    FirstWeight = 0.70000
+    FirstWeight = 0.70
     FirstGameLine = 10
-    SecondWeight = 0.30000
+    SecondWeight = 0.30
     # Score Difference Levels:
     FirstScoreLine = 5
     SecondScoreLine = 15
@@ -56,19 +56,14 @@ def convertFile(fileName):
         else:
             # Generate Attributes Line:
             resultLineDictionary = {PA2Index:0,PA3Index:0,FTAIndex:0,PTSIndex:0,ORBIndex:0,DRBIndex:0,ASTIndex:0,STLIndex:0,BLKIndex:0,TOVIndex:0}
-            resultLineDictionary1 = {PA2Index:0,PA3Index:0,FTAIndex:0,PTSIndex:0,ORBIndex:0,DRBIndex:0,ASTIndex:0,STLIndex:0,BLKIndex:0,TOVIndex:0}
-            resultLineDictionary2 = {PA2Index:0,PA3Index:0,FTAIndex:0,PTSIndex:0,ORBIndex:0,DRBIndex:0,ASTIndex:0,STLIndex:0,BLKIndex:0,TOVIndex:0}
             for i in range(homeGameIndex):
                 currentWeight = SecondWeight if (homeGameIndex-i)>FirstGameLine else FirstWeight
                 for attrKey in resultLineDictionary:
-                    resultLineDictionary1[attrKey] += int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight 
+                    resultLineDictionary[attrKey] += int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
             for i in range(oppGameIndex):
                 currentWeight = SecondWeight if (oppGameIndex-i)>FirstGameLine else FirstWeight
                 for attrKey in resultLineDictionary:
-                    resultLineDictionary2[attrKey] += int(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight 
-            for attrKey in resultLineDictionary:
-                resultLineDictionary[attrKey] = resultLineDictionary1[attrKey]//homeGameIndex - resultLineDictionary2[attrKey]//oppGameIndex
-
+                    resultLineDictionary[attrKey] -= int(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight / oppGameIndex
             # Generate Classified Result:
             scoreDif = int(dataRow[PTSIndex+HomeIndexOffset])-int(dataRow[PTSIndex])
             if scoreDif > SecondScoreLine:
