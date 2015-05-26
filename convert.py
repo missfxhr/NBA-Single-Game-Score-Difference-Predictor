@@ -88,7 +88,7 @@ def convertFile(fileName):
             resultLineList.append(scoreDifLvl)
             # Push the Line List into Result Data List
             resultData.append(resultLineList)
-    with open("result.csv", "wb") as outputFile:
+    with open(fileName[:len(fileName)-4]+"-result.csv", "wb") as outputFile:
         writer = csv.writer(outputFile)
         writer.writerows(resultData)
     return resultData, gamesDictionary
