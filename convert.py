@@ -11,8 +11,7 @@ def convertFile(fileName):
     FirstGameLine = 10
     SecondWeight = 0.30
     # Score Difference Levels:
-    FirstScoreLine = 5
-    SecondScoreLine = 15
+    ScoreLine = [0,5,15]
     # Attribute Names Dictionary:
     AllAttrNamesDictionary = {}
     AttrNamesDictionary = {}
@@ -34,7 +33,7 @@ def convertFile(fileName):
     AttrNamesDictionary[AllAttrNamesDictionary['STL']] = 'STL'
     AttrNamesDictionary[AllAttrNamesDictionary['BLK']] = 'BLK'
     AttrNamesDictionary[AllAttrNamesDictionary['TOV']] = 'TOV'
-    gamesDictionary = {'TOR': [],'BOS': [],'BRK': [],'PHI': [],'NYK': [],'CLE': [],'CHI': [],'MIL': [],'IND': [],'DET': [],'ATL': [],'WAS': [],'MIA': [],'ORL': [],'POR': [],'OKC': [],'UTA': [],'DEN': [],'MIN': [],'GSW': [],'LAC': [],'PHO': [],'SAC': [],'LAL': [],'HOU': [],'SAS': [],'MEM': [],'DAL': [],'NOP': [],'NOH':[],'CHA': [],'CHO': []}  
+    gamesDictionary = {'TOR': [],'BOS': [],'PHI': [],'NYK': [],'CLE': [],'CHI': [],'MIL': [],'IND': [],'DET': [],'ATL': [],'WAS': [],'MIA': [],'ORL': [],'POR': [],'OKC': [],'UTA': [],'DEN': [],'MIN': [],'GSW': [],'LAC': [],'PHO': [],'SAC': [],'LAL': [],'HOU': [],'SAS': [],'MEM': [],'DAL': [],'NOP': [],'NOH':[],'CHA': [],'CHO': [],'BRK': [],'NJN':[]}  
     # Generate Games Hash Table with Team Name as Keys:
     for dataRow in data:
         (gamesDictionary[dataRow[OppTeamIndex]]).append(dataRow)
@@ -69,18 +68,13 @@ def convertFile(fileName):
                     resultLineDictionary[attrKey] -= int(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight / oppGameIndex
             # Generate Classified Result:
             scoreDif = int(dataRow[AllAttrNamesDictionary['PTS']+HomeIndexOffset])-int(dataRow[AllAttrNamesDictionary['PTS']])
-            if scoreDif > SecondScoreLine:
-                scoreDifLvl = 'ScoreDifLvl2'
-            elif scoreDif < -SecondScoreLine:
-                scoreDifLvl = '-ScoreDifLvl2'
-            elif scoreDif > FirstScoreLine:
-                scoreDifLvl = 'ScoreDifLvl1'
-            elif scoreDif < -FirstScoreLine:
-                scoreDifLvl = '-ScoreDifLvl1'
-            elif scoreDif > 0:
-                scoreDifLvl = 'ScoreDifLvl0'
-            else:
-                scoreDifLvl = '-ScoreDifLvl0'
+            for i in reversed(ScoreLine):
+                if scoreDif > i:
+                    scoreDifLvl = 'ScoreDifLvl' + str(ScoreLine.index(i))
+                    break
+                elif scoreDif < -i:
+                    scoreDifLvl = '-ScoreDifLvl' + str(ScoreLine.index(i))
+                    break
             # Combine Two Things Together into Line List
             resultLineList = resultLineDictionary.values()
             resultLineList.append(scoreDifLvl)
