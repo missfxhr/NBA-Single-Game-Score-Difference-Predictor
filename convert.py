@@ -23,8 +23,11 @@ def convertFile(fileName):
     HomeIndexOffset = (len(firstRow)-GameInfoIndexLength)/2
     for i in range(GameInfoIndexLength,GameInfoIndexLength+HomeIndexOffset):
         AllAttrNamesDictionary[firstRow[i]] = i
+    AttrNamesDictionary[AllAttrNamesDictionary['2P']] = '2P'
     AttrNamesDictionary[AllAttrNamesDictionary['2PA']] = '2PA'
+    AttrNamesDictionary[AllAttrNamesDictionary['3P']] = '3P'
     AttrNamesDictionary[AllAttrNamesDictionary['3PA']] = '3PA'
+    AttrNamesDictionary[AllAttrNamesDictionary['FT']] = 'FT'
     AttrNamesDictionary[AllAttrNamesDictionary['FTA']] = 'FTA'
     AttrNamesDictionary[AllAttrNamesDictionary['PTS']] = 'PTS'
     AttrNamesDictionary[AllAttrNamesDictionary['ORB']] = 'ORB'
@@ -61,11 +64,11 @@ def convertFile(fileName):
             for i in range(homeGameIndex):
                 currentWeight = SecondWeight if (homeGameIndex-i)>FirstGameLine else FirstWeight
                 for attrKey in resultLineDictionary:
-                    resultLineDictionary[attrKey] += int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
+                    resultLineDictionary[attrKey] += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
             for i in range(oppGameIndex):
                 currentWeight = SecondWeight if (oppGameIndex-i)>FirstGameLine else FirstWeight
                 for attrKey in resultLineDictionary:
-                    resultLineDictionary[attrKey] -= int(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight / oppGameIndex
+                    resultLineDictionary[attrKey] -= float(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight / oppGameIndex
             # Generate Classified Result:
             scoreDif = int(dataRow[AllAttrNamesDictionary['PTS']+HomeIndexOffset])-int(dataRow[AllAttrNamesDictionary['PTS']])
             for i in reversed(ScoreLine):
