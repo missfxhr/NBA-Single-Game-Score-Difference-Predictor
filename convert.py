@@ -80,13 +80,13 @@ def convertFile(fileName):
                 oppTeamValue = 0
                 percentFix = 100 if AttrNamesDictionary[attrKey][-1] == 'r' or AttrNamesDictionary[attrKey][-1] == 'p' else 1
                 for i in range(homeGameIndex):
-                    currentWeight = 1/(GameWeightOffset+math.log(1+i))
+                    currentWeight = 1/(GameWeightOffset+math.log(1.0+i))
                     totalHomeWeight += currentWeight
                     homeTeamValue += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight
                 for i in range(oppGameIndex):
-                    currentWeight = 1/(GameWeightOffset+math.log(1+i))
+                    currentWeight = 1/(GameWeightOffset+math.log(1.0+i))
                     totalOppWeight += currentWeight
-                    oppTeamValue += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight
+                    oppTeamValue += float(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight
                 resultLineDictionary[attrKey] = percentFix*(homeTeamValue/(totalHomeWeight*homeGameIndex) - oppTeamValue/(totalOppWeight*oppGameIndex))
             # Generate Classified Result:
             scoreDif = int(dataRow[AllAttrNamesDictionary['PTS']+HomeIndexOffset])-int(dataRow[AllAttrNamesDictionary['PTS']])
