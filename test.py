@@ -2,7 +2,7 @@ import csv
 execfile("convert.py")
 result = []
 firstLine = []
-for i in range(11,15):
+for i in range(14,15):
     result1, result2 = convertFile(str(i)+'-'+str(i+1)+'.csv')
     result += result1[1:]
     firstLine = result1[0]
