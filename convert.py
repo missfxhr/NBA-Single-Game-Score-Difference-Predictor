@@ -23,21 +23,33 @@ def convertFile(fileName):
     HomeIndexOffset = (len(firstRow)-GameInfoIndexLength)/2
     for i in range(GameInfoIndexLength,GameInfoIndexLength+HomeIndexOffset):
         AllAttrNamesDictionary[firstRow[i]] = i
+    AttrNamesDictionary[AllAttrNamesDictionary['FG']] = 'FG'
+    AttrNamesDictionary[AllAttrNamesDictionary['FGA']] = 'FGA'
+    AttrNamesDictionary[AllAttrNamesDictionary['FG%']] = 'FGp'
+    AttrNamesDictionary[AllAttrNamesDictionary['2P']] = '2P'
+    AttrNamesDictionary[AllAttrNamesDictionary['2PA']] = '2PA'
     AttrNamesDictionary[AllAttrNamesDictionary['2P%']] = '2Pp'
+    AttrNamesDictionary[AllAttrNamesDictionary['3P']] = '3P'
+    AttrNamesDictionary[AllAttrNamesDictionary['3PA']] = '3PA'
     AttrNamesDictionary[AllAttrNamesDictionary['3P%']] = '3Pp'
+    AttrNamesDictionary[AllAttrNamesDictionary['FT']] = 'FT'
+    AttrNamesDictionary[AllAttrNamesDictionary['FTA']] = 'FTA'
     AttrNamesDictionary[AllAttrNamesDictionary['FT%']] = 'FTp'
     AttrNamesDictionary[AllAttrNamesDictionary['PTS']] = 'PTS'
+    AttrNamesDictionary[AllAttrNamesDictionary['ORtg']] = 'ORtg'
+    AttrNamesDictionary[AllAttrNamesDictionary['FTr']] = 'FTr'
+    AttrNamesDictionary[AllAttrNamesDictionary['3PAr']] = '3PAr'
+    AttrNamesDictionary[AllAttrNamesDictionary['TS%']] = 'TSp'
+    AttrNamesDictionary[AllAttrNamesDictionary['eFG%']] = 'eFGp'
+    AttrNamesDictionary[AllAttrNamesDictionary['FT/FGA']] = 'FT/FGA'
     AttrNamesDictionary[AllAttrNamesDictionary['ORB']] = 'ORB'
     AttrNamesDictionary[AllAttrNamesDictionary['DRB']] = 'DRB'
+    AttrNamesDictionary[AllAttrNamesDictionary['TRB']] = 'TRB'
     AttrNamesDictionary[AllAttrNamesDictionary['AST']] = 'AST'
     AttrNamesDictionary[AllAttrNamesDictionary['STL']] = 'STL'
     AttrNamesDictionary[AllAttrNamesDictionary['BLK']] = 'BLK'
     AttrNamesDictionary[AllAttrNamesDictionary['TOV']] = 'TOV'
-    AttrNamesDictionary[AllAttrNamesDictionary['ORtg']] = 'ORtg'
-    AttrNamesDictionary[AllAttrNamesDictionary['FTr']] = 'FTr'
-    AttrNamesDictionary[AllAttrNamesDictionary['TS%']] = 'TSp'
-    AttrNamesDictionary[AllAttrNamesDictionary['eFG%']] = 'eFGp'
-    AttrNamesDictionary[AllAttrNamesDictionary['FT/FGA']] = 'FT/FGA'
+    AttrNamesDictionary[AllAttrNamesDictionary['PF']] = 'PF'
     gamesDictionary = {'TOR': [],'BOS': [],'PHI': [],'NYK': [],'CLE': [],'CHI': [],'MIL': [],'IND': [],'DET': [],'ATL': [],'WAS': [],'MIA': [],'ORL': [],'POR': [],'OKC': [],'UTA': [],'DEN': [],'MIN': [],'GSW': [],'LAC': [],'PHO': [],'SAC': [],'LAL': [],'HOU': [],'SAS': [],'MEM': [],'DAL': [],'NOP': [],'NOH':[],'CHA': [],'CHO': [],'BRK': [],'NJN':[]}  
     # Generate Games Hash Table with Team Name as Keys:
     for dataRow in data:
