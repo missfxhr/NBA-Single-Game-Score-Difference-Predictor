@@ -23,12 +23,9 @@ def convertFile(fileName):
     HomeIndexOffset = (len(firstRow)-GameInfoIndexLength)/2
     for i in range(GameInfoIndexLength,GameInfoIndexLength+HomeIndexOffset):
         AllAttrNamesDictionary[firstRow[i]] = i
-    AttrNamesDictionary[AllAttrNamesDictionary['2P']] = '2P'
-    AttrNamesDictionary[AllAttrNamesDictionary['2PA']] = '2PA'
-    AttrNamesDictionary[AllAttrNamesDictionary['3P']] = '3P'
-    AttrNamesDictionary[AllAttrNamesDictionary['3PA']] = '3PA'
-    AttrNamesDictionary[AllAttrNamesDictionary['FT']] = 'FT'
-    AttrNamesDictionary[AllAttrNamesDictionary['FTA']] = 'FTA'
+    AttrNamesDictionary[AllAttrNamesDictionary['2P%']] = '2Pp'
+    AttrNamesDictionary[AllAttrNamesDictionary['3P%']] = '3Pp'
+    AttrNamesDictionary[AllAttrNamesDictionary['FT%']] = 'FTp'
     AttrNamesDictionary[AllAttrNamesDictionary['PTS']] = 'PTS'
     AttrNamesDictionary[AllAttrNamesDictionary['ORB']] = 'ORB'
     AttrNamesDictionary[AllAttrNamesDictionary['DRB']] = 'DRB'
@@ -64,12 +61,22 @@ def convertFile(fileName):
             for i in range(homeGameIndex):
                 currentWeight = SecondWeight if (homeGameIndex-i)>FirstGameLine else FirstWeight
                 for attrKey in resultLineDictionary:
-                    resultLineDictionary[attrKey] += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
+                    if attrKey==AllAttrNamesDictionary['2P%'] or attrKey==AllAttrNamesDictionary['3P%'] or attrKey==AllAttrNamesDictionary['FT%'] :
+                        resultLineDictionary[attrKey] += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex*100
+                    else:
+                        resultLineDictionary[attrKey] += int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
             for i in range(oppGameIndex):
                 currentWeight = SecondWeight if (oppGameIndex-i)>FirstGameLine else FirstWeight
                 for attrKey in resultLineDictionary:
-                    resultLineDictionary[attrKey] -= float(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight / oppGameIndex
+                    if attrKey==AllAttrNamesDictionary['2P%'] or attrKey==AllAttrNamesDictionary['3P%'] or attrKey==AllAttrNamesDictionary['FT%'] :
+                        resultLineDictionary[attrKey] -= float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex*100
+                    else:
+                        resultLineDictionary[attrKey] -= int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
             # Generate Classified Result:
+            # for attrKey in resultLineDictionary:
+            #     if attrKey <3:
+            #         resultLineDictionary[attrKey]=resultLineDictionary[attrKey]*1000
+
             scoreDif = int(dataRow[AllAttrNamesDictionary['PTS']+HomeIndexOffset])-int(dataRow[AllAttrNamesDictionary['PTS']])
             for i in reversed(ScoreLine):
                 if scoreDif > i:
