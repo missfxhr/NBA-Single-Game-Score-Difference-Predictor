@@ -33,6 +33,11 @@ def convertFile(fileName):
     AttrNamesDictionary[AllAttrNamesDictionary['STL']] = 'STL'
     AttrNamesDictionary[AllAttrNamesDictionary['BLK']] = 'BLK'
     AttrNamesDictionary[AllAttrNamesDictionary['TOV']] = 'TOV'
+    AttrNamesDictionary[AllAttrNamesDictionary['ORtg']] = 'ORtg'
+    AttrNamesDictionary[AllAttrNamesDictionary['FTr']] = 'FTr'
+    AttrNamesDictionary[AllAttrNamesDictionary['TS%']] = 'TSp'
+    AttrNamesDictionary[AllAttrNamesDictionary['eFG%']] = 'eFGp'
+    AttrNamesDictionary[AllAttrNamesDictionary['FT/FGA']] = 'FT/FGA'
     gamesDictionary = {'TOR': [],'BOS': [],'PHI': [],'NYK': [],'CLE': [],'CHI': [],'MIL': [],'IND': [],'DET': [],'ATL': [],'WAS': [],'MIA': [],'ORL': [],'POR': [],'OKC': [],'UTA': [],'DEN': [],'MIN': [],'GSW': [],'LAC': [],'PHO': [],'SAC': [],'LAL': [],'HOU': [],'SAS': [],'MEM': [],'DAL': [],'NOP': [],'NOH':[],'CHA': [],'CHO': [],'BRK': [],'NJN':[]}  
     # Generate Games Hash Table with Team Name as Keys:
     for dataRow in data:
