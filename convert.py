@@ -1,4 +1,5 @@
 import csv
+import math
 from operator import itemgetter
 def convertFile(fileName):
     # Index Const:
@@ -7,9 +8,8 @@ def convertFile(fileName):
     HomeTeamIndex = 4
     GameInfoIndexLength = 7
     # Game Weights:
-    FirstWeight = 0.70
-    FirstGameLine = 10
-    SecondWeight = 0.30
+    MinGameNum = 5
+    GameWeightOffset = 1  
     # Score Difference Levels:
     ScoreLine = [0,5,15]
     # Attribute Names Dictionary:
@@ -68,27 +68,26 @@ def convertFile(fileName):
         date = dataRow[DateIndex]
         homeGameIndex = [index for index, game in enumerate(gamesDictionary[homeTeamKey]) if game[DateIndex] == date][0]
         oppGameIndex = [index for index, game in enumerate(gamesDictionary[oppTeamKey]) if game[DateIndex] == date][0]     
-        if homeGameIndex < FirstGameLine or oppGameIndex < FirstGameLine:
+        if homeGameIndex < MinGameNum or oppGameIndex < MinGameNum:
             continue
         else:
             # Generate Attributes Line:
             resultLineDictionary = {}
             for attrKey in AttrNamesDictionary:
-                resultLineDictionary[attrKey] = 0
-            for i in range(homeGameIndex):
-                currentWeight = SecondWeight if (homeGameIndex-i)>FirstGameLine else FirstWeight
-                for attrKey in resultLineDictionary:
-                    # if attrKey==AllAttrNamesDictionary['2P%'] or attrKey==AllAttrNamesDictionary['3P%'] or attrKey==AllAttrNamesDictionary['FT%'] :
-                    #     resultLineDictionary[attrKey] += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex*100
-                    # else:
-                    resultLineDictionary[attrKey] += int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
-            for i in range(oppGameIndex):
-                currentWeight = SecondWeight if (oppGameIndex-i)>FirstGameLine else FirstWeight
-                for attrKey in resultLineDictionary:
-                    # if attrKey==AllAttrNamesDictionary['2P%'] or attrKey==AllAttrNamesDictionary['3P%'] or attrKey==AllAttrNamesDictionary['FT%'] :
-                    #     resultLineDictionary[attrKey] -= float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex*100
-                    # else:
-                    resultLineDictionary[attrKey] -= int(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight / homeGameIndex
+                totalHomeWeight = 0
+                homeTeamValue = 0
+                totalOppWeight = 0
+                oppTeamValue = 0
+                percentFix = 100 if AttrNamesDictionary[attrKey][-1] == 'r' or AttrNamesDictionary[attrKey][-1] == 'p' else 1
+                for i in range(homeGameIndex):
+                    currentWeight = 1/(GameWeightOffset+math.log(1+i))
+                    totalHomeWeight += currentWeight
+                    homeTeamValue += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight
+                for i in range(oppGameIndex):
+                    currentWeight = 1/(GameWeightOffset+math.log(1+i))
+                    totalOppWeight += currentWeight
+                    oppTeamValue += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight
+                resultLineDictionary[attrKey] = percentFix*(homeTeamValue/(totalHomeWeight*homeGameIndex) - oppTeamValue/(totalOppWeight*oppGameIndex))
             # Generate Classified Result:
             scoreDif = int(dataRow[AllAttrNamesDictionary['PTS']+HomeIndexOffset])-int(dataRow[AllAttrNamesDictionary['PTS']])
             for i in reversed(ScoreLine):
