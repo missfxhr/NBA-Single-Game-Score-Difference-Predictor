@@ -8,10 +8,11 @@ def convertFile(fileName):
     HomeTeamIndex = 4
     GameInfoIndexLength = 7
     # Game Weights:
-    MinGameNum = 5
-    GameWeightOffset = 1  
+    MinGameNum = 10
+    GameWeightOffset = 2
     # Score Difference Levels:
-    ScoreLine = [0,5,15]
+    # ScoreLine = [-10,-3,4,9,15]
+    ScoreLine = [4]
     # Attribute Names Dictionary:
     AllAttrNamesDictionary = {}
     AttrNamesDictionary = {}
@@ -24,32 +25,32 @@ def convertFile(fileName):
     for i in range(GameInfoIndexLength,GameInfoIndexLength+HomeIndexOffset):
         AllAttrNamesDictionary[firstRow[i]] = i
     AttrNamesDictionary[AllAttrNamesDictionary['FG']] = 'FG'
-    AttrNamesDictionary[AllAttrNamesDictionary['FGA']] = 'FGA'
-    AttrNamesDictionary[AllAttrNamesDictionary['FG%']] = 'FGp'
+    # AttrNamesDictionary[AllAttrNamesDictionary['FGA']] = 'FGA'
+    # AttrNamesDictionary[AllAttrNamesDictionary['FG%']] = 'FGp'
     AttrNamesDictionary[AllAttrNamesDictionary['2P']] = '2P'
     AttrNamesDictionary[AllAttrNamesDictionary['2PA']] = '2PA'
-    AttrNamesDictionary[AllAttrNamesDictionary['2P%']] = '2Pp'
-    AttrNamesDictionary[AllAttrNamesDictionary['3P']] = '3P'
+    # AttrNamesDictionary[AllAttrNamesDictionary['2P%']] = '2Pp'
+    # AttrNamesDictionary[AllAttrNamesDictionary['3P']] = '3P'
     AttrNamesDictionary[AllAttrNamesDictionary['3PA']] = '3PA'
-    AttrNamesDictionary[AllAttrNamesDictionary['3P%']] = '3Pp'
+    # AttrNamesDictionary[AllAttrNamesDictionary['3P%']] = '3Pp'
     AttrNamesDictionary[AllAttrNamesDictionary['FT']] = 'FT'
     AttrNamesDictionary[AllAttrNamesDictionary['FTA']] = 'FTA'
-    AttrNamesDictionary[AllAttrNamesDictionary['FT%']] = 'FTp'
+    # AttrNamesDictionary[AllAttrNamesDictionary['FT%']] = 'FTp'
     AttrNamesDictionary[AllAttrNamesDictionary['PTS']] = 'PTS'
     AttrNamesDictionary[AllAttrNamesDictionary['ORtg']] = 'ORtg'
-    AttrNamesDictionary[AllAttrNamesDictionary['FTr']] = 'FTr'
-    AttrNamesDictionary[AllAttrNamesDictionary['3PAr']] = '3PAr'
-    AttrNamesDictionary[AllAttrNamesDictionary['TS%']] = 'TSp'
+    # AttrNamesDictionary[AllAttrNamesDictionary['FTr']] = 'FTr'
+    # AttrNamesDictionary[AllAttrNamesDictionary['3PAr']] = '3PAr'
+    # AttrNamesDictionary[AllAttrNamesDictionary['TS%']] = 'TSp'
     AttrNamesDictionary[AllAttrNamesDictionary['eFG%']] = 'eFGp'
-    AttrNamesDictionary[AllAttrNamesDictionary['FT/FGA']] = 'FT/FGA'
-    AttrNamesDictionary[AllAttrNamesDictionary['ORB']] = 'ORB'
+    # AttrNamesDictionary[AllAttrNamesDictionary['FT/FGA']] = 'FT/FGA'
+    # AttrNamesDictionary[AllAttrNamesDictionary['ORB']] = 'ORB'
     AttrNamesDictionary[AllAttrNamesDictionary['DRB']] = 'DRB'
-    AttrNamesDictionary[AllAttrNamesDictionary['TRB']] = 'TRB'
+    # AttrNamesDictionary[AllAttrNamesDictionary['TRB']] = 'TRB'
     AttrNamesDictionary[AllAttrNamesDictionary['AST']] = 'AST'
     AttrNamesDictionary[AllAttrNamesDictionary['STL']] = 'STL'
     AttrNamesDictionary[AllAttrNamesDictionary['BLK']] = 'BLK'
-    AttrNamesDictionary[AllAttrNamesDictionary['TOV']] = 'TOV'
-    AttrNamesDictionary[AllAttrNamesDictionary['PF']] = 'PF'
+    # AttrNamesDictionary[AllAttrNamesDictionary['TOV']] = 'TOV'
+    #AttrNamesDictionary[AllAttrNamesDictionary['PF']] = 'PF'
     gamesDictionary = {'TOR': [],'BOS': [],'PHI': [],'NYK': [],'CLE': [],'CHI': [],'MIL': [],'IND': [],'DET': [],'ATL': [],'WAS': [],'MIA': [],'ORL': [],'POR': [],'OKC': [],'UTA': [],'DEN': [],'MIN': [],'GSW': [],'LAC': [],'PHO': [],'SAC': [],'LAL': [],'HOU': [],'SAS': [],'MEM': [],'DAL': [],'NOP': [],'NOH':[],'CHA': [],'CHO': [],'BRK': [],'NJN':[]}  
     # Generate Games Hash Table with Team Name as Keys:
     for dataRow in data:
@@ -80,22 +81,22 @@ def convertFile(fileName):
                 oppTeamValue = 0
                 percentFix = 100 if AttrNamesDictionary[attrKey][-1] == 'r' or AttrNamesDictionary[attrKey][-1] == 'p' else 1
                 for i in range(homeGameIndex):
-                    currentWeight = 1/(GameWeightOffset+math.log(1.0+i))
+                    currentWeight = 1/(math.log(1.0+i+GameWeightOffset))
                     totalHomeWeight += currentWeight
                     homeTeamValue += float(gamesDictionary[homeTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[homeTeamKey][i][HomeTeamIndex] == homeTeamKey else 0)]) * currentWeight
                 for i in range(oppGameIndex):
-                    currentWeight = 1/(GameWeightOffset+math.log(1.0+i))
+                    currentWeight = 1/(math.log(1.0+i+GameWeightOffset))
                     totalOppWeight += currentWeight
                     oppTeamValue += float(gamesDictionary[oppTeamKey][i][attrKey + (HomeIndexOffset if gamesDictionary[oppTeamKey][i][HomeTeamIndex] == oppTeamKey else 0)]) * currentWeight
                 resultLineDictionary[attrKey] = percentFix*(homeTeamValue/(totalHomeWeight*homeGameIndex) - oppTeamValue/(totalOppWeight*oppGameIndex))
             # Generate Classified Result:
             scoreDif = int(dataRow[AllAttrNamesDictionary['PTS']+HomeIndexOffset])-int(dataRow[AllAttrNamesDictionary['PTS']])
-            for i in reversed(ScoreLine):
-                if scoreDif > i:
-                    scoreDifLvl = 'ScoreDifLvl' + str(ScoreLine.index(i))
+            for i in reversed(range((len(ScoreLine)+1)/2)):
+                if scoreDif >= ScoreLine[(len(ScoreLine)-1)/2+i]:
+                    scoreDifLvl = 'ScoreDifLvl' + str(i)
                     break
-                elif scoreDif < -i:
-                    scoreDifLvl = '-ScoreDifLvl' + str(ScoreLine.index(i))
+                elif scoreDif < ScoreLine[(len(ScoreLine)-1)/2-i]:
+                    scoreDifLvl = '-ScoreDifLvl' + str(i)
                     break
             # Combine Two Things Together into Line List
             resultLineList = resultLineDictionary.values()
